@@ -23,8 +23,6 @@ class Grid:
         self.board[2][1] = 10
         self.board[2][2] = 10
 
-
-
         self.display()
 
     def new_values(self):
@@ -41,7 +39,7 @@ class Grid:
         self.board = compress(arr3)
 
         self.new_values()
-        self.display()
+##        self.display()
 
     def right(self):
         arr1 = self.board.copy()
@@ -53,7 +51,7 @@ class Grid:
         self.board = reverse(arr5)
 
         self.new_values()
-        self.display()
+##        self.display()
 
     def up(self):
         arr1 = self.board.copy()
@@ -65,7 +63,7 @@ class Grid:
         self.board = transp(arr5)
 
         self.new_values()
-        self.display()
+##        self.display()
 
     def down(self):
         arr1 = self.board.copy()
@@ -79,7 +77,7 @@ class Grid:
         self.board = transp(arr7)
 
         self.new_values()
-        self.display()
+##        self.display()
 
     def display(self):
         print("-----------------------------------------")
