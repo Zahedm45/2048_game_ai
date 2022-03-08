@@ -15,9 +15,14 @@ class Grid:
 
 ##        self.board[i_1[0]][i_1[1]], self.board[i_2[0]][i_2[1]] = 2, 2
 
-        self.board[0][2] = 4
+        self.board[0][2] = 2
         self.board[0][3] = 2
         self.board[0][0] = 2
+        self.board[3][2] = 2
+
+        self.board[2][1] = 10
+        self.board[2][2] = 10
+
 
 
         self.display()
@@ -93,32 +98,54 @@ class Grid:
 
         row_size = int(self.board.size / len(self.board[0]))
         for i in range(row_size):
-            for j in range(0, row_size-1):
+            for j in range(row_size):
 
                 if self.board[i][j] != 0:
                     g.is_row_matching(i, j)
+                    g.is_column_matching(i, j)
 
-                # if self.board[i][j] != 0 and self.board[i][j] == self.board[i][j + 1]:
-                #     print("here")
-                #     g.left()
-                #     g.ai(g)
+
 
     def is_row_matching(self, row, column):
+        size = int(self.board.size / len(self.board[0]))
+        if column == size-1:
+##            print("last element")
+            return
 
         value = self.board[row][column]
-        size = int(self.board.size / len(self.board[0]))
         i = column + 1
         while i < size:
-
             temp = self.board[row][i]
             if temp != 0:
                 if temp == value:
                     print("matched")
                     return 1
                 else:
-                    print("break")
+##                    print("break")
                     break
             i += 1
+
+    def is_column_matching(self, row, column):
+        size = int(self.board.size / len(self.board[0]))
+        if row == size-1:
+##            print("last element (column)")
+            return
+
+        value = self.board[row][column]
+        i = row + 1
+        while i < size:
+            temp = self.board[i][column]
+            if temp != 0:
+                if temp == value:
+                    print("matched(column)")
+                    return 1
+                else:
+##                    print("break(column)")
+                    break
+            i += 1
+##        print("not matched")
+
+
 
 
 
