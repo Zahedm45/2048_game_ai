@@ -13,7 +13,13 @@ class Grid:
         while i_2 == i_1:
             i_2 = [random.randint(0, 3), random.randint(0, 3)]
 
-        self.board[i_1[0]][i_1[1]], self.board[i_2[0]][i_2[1]] = 2, 2
+##        self.board[i_1[0]][i_1[1]], self.board[i_2[0]][i_2[1]] = 2, 2
+
+        self.board[0][2] = 4
+        self.board[0][3] = 2
+        self.board[0][0] = 2
+
+
         self.display()
 
     def new_values(self):
@@ -101,14 +107,8 @@ class Grid:
 
         value = self.board[row][column]
         size = int(self.board.size / len(self.board[0]))
-        print("size: " + str(size))
         i = column + 1
-##        print("is_row1: " + str(i))
         while i < size:
-##            print("is_row: " + str(i))
-            if column == size - 1:
-                print("last")
-                break
 
             temp = self.board[row][i]
             if temp != 0:
@@ -118,29 +118,10 @@ class Grid:
                 else:
                     print("break")
                     break
-            print("loop")
             i += 1
 
-        print("loop-out")
 
 
-
-
-
-        #
-        # for i in range(column + 1, size - 1):
-        #     temp = self.board[row][i]
-        #     if temp != 0:
-        #         if temp == value:
-        #             print("matched")
-        #             return 1
-        #         else:
-        #             print("break")
-        #             break
-        #     print("loop")
-
-
-            # for i in range(column - 1, 0, -1):
 
 
 
