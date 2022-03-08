@@ -83,13 +83,12 @@ class Grid:
 
         self.state += 1
 
+    def ai(self):
+        for i in range(4):
+            for j in range(4):
+                print(self.board[i][j])
+
 
 g = Grid()
 g.down()
-
-i = g.board.size
-
-
-
-
-print(g.board[0][0])
+g.ai()
