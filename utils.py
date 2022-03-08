@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def compress(mat):
     new_mat = np.zeros((4, 4), dtype=int)
     for i in range(4):
@@ -11,13 +12,14 @@ def compress(mat):
     return new_mat
 
 
-def merge(mat):
+def merge(mat, new_score):
     for i in range(4):
         for j in range(3):
             if mat[i][j] == mat[i][j + 1] and mat[i][j] != 0:
                 mat[i][j] += mat[i][j]
+                new_score += mat[i][j] * 2
                 mat[i][j + 1] = 0
-    return np.array(mat)
+    return (np.array(mat), new_score)
 
 
 def reverse(mat):
