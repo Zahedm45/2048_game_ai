@@ -13,15 +13,18 @@ class Grid:
         while i_2 == i_1:
             i_2 = [random.randint(0, 3), random.randint(0, 3)]
 
-##        self.board[i_1[0]][i_1[1]], self.board[i_2[0]][i_2[1]] = 2, 2
+        ##        self.board[i_1[0]][i_1[1]], self.board[i_2[0]][i_2[1]] = 2, 2
 
-        self.board[0][2] = 2
-        self.board[0][3] = 2
-        self.board[0][0] = 2
-        self.board[3][2] = 2
+        # self.board[0][2] = 2
+        # self.board[0][3] = 2
+        # self.board[0][0] = 2
+        # self.board[3][2] = 2
+        #
+        # self.board[2][1] = 10
+        # self.board[2][2] = 10
 
-        self.board[2][1] = 10
-        self.board[2][2] = 10
+        self.board[1][1] = 2
+        self.board[1][3] = 2
 
         self.display()
 
@@ -39,7 +42,8 @@ class Grid:
         self.board = compress(arr3)
 
         self.new_values()
-##        self.display()
+
+    ##        self.display()
 
     def right(self):
         arr1 = self.board.copy()
@@ -51,7 +55,8 @@ class Grid:
         self.board = reverse(arr5)
 
         self.new_values()
-##        self.display()
+
+    ##        self.display()
 
     def up(self):
         arr1 = self.board.copy()
@@ -63,7 +68,8 @@ class Grid:
         self.board = transp(arr5)
 
         self.new_values()
-##        self.display()
+
+    ##        self.display()
 
     def down(self):
         arr1 = self.board.copy()
@@ -77,7 +83,8 @@ class Grid:
         self.board = transp(arr7)
 
         self.new_values()
-##        self.display()
+
+    ##        self.display()
 
     def display(self):
         print("-----------------------------------------")
@@ -100,16 +107,15 @@ class Grid:
 
                 if self.board[i][j] != 0:
                     old_board = self.board
-                    g.is_row_matching(i, j)
-                    self.display()
-                    g.is_column_matching(i, j)
-
-
+                    # g.is_row_matching(i, j)
+                    # g.is_column_matching(i, j)
+                    g.is_matching_with_row_neighbour(i, j)
+                    g.is_matching_with_column_neighbour(i,j)
 
     def is_row_matching(self, row, column):
         size = int(self.board.size / len(self.board[0]))
-        if column == size-1:
-##            print("last element")
+        if column == size - 1:
+            ##            print("last element")
             return
 
         value = self.board[row][column]
@@ -121,14 +127,14 @@ class Grid:
                     print("matched")
                     return 1
                 else:
-##                    print("break")
+                    ##                    print("break")
                     break
             i += 1
 
     def is_column_matching(self, row, column):
         size = int(self.board.size / len(self.board[0]))
-        if row == size-1:
-##            print("last element (column)")
+        if row == size - 1:
+            ##            print("last element (column)")
             return
 
         value = self.board[row][column]
@@ -140,35 +146,34 @@ class Grid:
                     print("matched(column)")
                     return 1
                 else:
-##                    print("break(column)")
+                    ##                    print("break(column)")
                     break
             i += 1
-##        print("not matched")
 
+    def is_matching_with_column_neighbour(self, row, column):
+        size = int(self.board.size / len(self.board[0]))
+        if column == size - 1:
+            ##            print("last element")
+            return
 
+        value = self.board[row][column]
 
+        if self.board[row][column + 1] == value:
+            print("column")
+            return True
 
+    def is_matching_with_row_neighbour(self, row, column):
+        size = int(self.board.size / len(self.board[0]))
+        if row == size - 1:
+            ##            print("last element")
+            return
 
+        value = self.board[row][column]
 
+        if self.board[row + 1][column] == value:
+            print("hello")
+            return True
 
 
 g = Grid()
 g.ai(g)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
