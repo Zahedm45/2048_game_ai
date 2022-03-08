@@ -83,12 +83,84 @@ class Grid:
 
         self.state += 1
 
-    def ai(self):
-        for i in range(4):
-            for j in range(4):
-                print(self.board[i][j])
+    def ai(self, g):
+
+        row_size = int(self.board.size / len(self.board[0]))
+        for i in range(row_size):
+            for j in range(0, row_size-1):
+
+                if self.board[i][j] != 0:
+                    g.is_row_matching(i, j)
+
+                # if self.board[i][j] != 0 and self.board[i][j] == self.board[i][j + 1]:
+                #     print("here")
+                #     g.left()
+                #     g.ai(g)
+
+    def is_row_matching(self, row, column):
+
+        value = self.board[row][column]
+        size = int(self.board.size / len(self.board[0]))
+        print("size: " + str(size))
+        i = column + 1
+##        print("is_row1: " + str(i))
+        while i < size:
+##            print("is_row: " + str(i))
+            if column == size - 1:
+                print("last")
+                break
+
+            temp = self.board[row][i]
+            if temp != 0:
+                if temp == value:
+                    print("matched")
+                    return 1
+                else:
+                    print("break")
+                    break
+            print("loop")
+            i += 1
+
+        print("loop-out")
+
+
+
+
+
+        #
+        # for i in range(column + 1, size - 1):
+        #     temp = self.board[row][i]
+        #     if temp != 0:
+        #         if temp == value:
+        #             print("matched")
+        #             return 1
+        #         else:
+        #             print("break")
+        #             break
+        #     print("loop")
+
+
+            # for i in range(column - 1, 0, -1):
+
 
 
 g = Grid()
-g.down()
-g.ai()
+g.ai(g)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
