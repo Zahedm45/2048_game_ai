@@ -14,10 +14,15 @@ class Grid:
             i_2 = [random.randint(0, 3), random.randint(0, 3)]
 
         self.board[i_1[0]][i_1[1]], self.board[i_2[0]][i_2[1]] = 2, 2
-        self.have_lost = False
+        self.lost = False
+        self.win = False
         self.display("")
 
-    def lost(self):
+    def have_win(self):
+        if self.score >= 600:
+            self.win = True
+
+    def have_lost(self):
         for i in range(3):
             for j in range(3):
                 if (
@@ -34,7 +39,7 @@ class Grid:
             if self.board[i][3] == self.board[i + 1][3]:
                 pass
 
-        self.have_lost = True
+        self.lost = True
 
     def new_values(self):
         i, j = random.randint(0, 3), random.randint(0, 3)
@@ -55,6 +60,12 @@ class Grid:
         elif move == "RIGHT":
             self.right()
 
+        self.have_win()
+
+        if self.win:
+            self.display(move)
+            return
+
         for i in range(4):
             for j in range(4):
                 if self.board[i][j] == 0:
@@ -65,7 +76,7 @@ class Grid:
 
         self.display(move)
         self.state += 1
-        self.lost()
+        self.have_lost()
 
     def left(self):
         arr1 = self.board.copy()
@@ -126,6 +137,7 @@ class Grid:
 
 g = Grid()
 
-while not g.have_lost:
+while not(g.lost or g.win):
     g.move(random.choice(["UP", "DOWN", "LEFT", "RIGHT"]))
-print("YOU LOSE")
+    
+print("YOU LOSE" if g.lost else "YOU WIN")
