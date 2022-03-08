@@ -72,19 +72,15 @@ class Grid:
 
     def display(self):
         print("-----------------------------------------")
-
         print("State: " + str(self.state) + "       " + "Score: " + str(self.score))
         print("")
         for row in self.board:
             print(
                 "{:<10s} {:<10s} {:<10s} {:<10s}".format(
-                    str(row[0]) if row[0] != 0 else ".",
-                    str(row[1]) if row[1] != 0 else ".",
-                    str(row[2]) if row[2] != 0 else ".",
-                    str(row[3]) if row[3] != 0 else ".",
+                    *[str(r) if r != 0 else "." for r in row]
                 )
             )
-        print("")
+
         self.state += 1
 
 
