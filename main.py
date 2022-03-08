@@ -137,7 +137,7 @@ class Grid:
 
 g = Grid()
 
-while not(g.lost or g.win):
+while not (g.lost or g.win):
     g.move(random.choice(["UP", "DOWN", "LEFT", "RIGHT"]))
-    
+
 print("YOU LOSE" if g.lost else "YOU WIN")
