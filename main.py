@@ -99,7 +99,9 @@ class Grid:
             for j in range(row_size):
 
                 if self.board[i][j] != 0:
+                    old_board = self.board
                     g.is_row_matching(i, j)
+                    self.display()
                     g.is_column_matching(i, j)
 
 
