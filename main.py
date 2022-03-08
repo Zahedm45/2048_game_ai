@@ -85,7 +85,11 @@ class Grid:
 
 
 g = Grid()
-g.left()
-g.right()
 g.down()
-g.up()
+
+i = g.board.size
+
+
+
+
+print(g.board[0][0])
