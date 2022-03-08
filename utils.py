@@ -17,7 +17,7 @@ def merge(mat, new_score):
         for j in range(3):
             if mat[i][j] == mat[i][j + 1] and mat[i][j] != 0:
                 mat[i][j] += mat[i][j]
-                new_score += mat[i][j] * 2
+                new_score += mat[i][j]
                 mat[i][j + 1] = 0
     return (np.array(mat), new_score)
 
