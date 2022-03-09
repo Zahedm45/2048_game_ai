@@ -27,6 +27,7 @@ class Grid:
         self.board[1][3] = 2
 
         self.display()
+        self.old_board = None
 
     def new_values(self):
         ij = [random.randint(0, 3), random.randint(0, 3)]
@@ -99,18 +100,7 @@ class Grid:
 
         self.state += 1
 
-    def ai(self, g):
 
-        row_size = int(self.board.size / len(self.board[0]))
-        for i in range(row_size):
-            for j in range(row_size):
-
-                if self.board[i][j] != 0:
-                    old_board = self.board
-                    # g.is_row_matching(i, j)
-                    # g.is_column_matching(i, j)
-                    g.is_matching_with_row_neighbour(i, j)
-                    g.is_matching_with_column_neighbour(i,j)
 
     def is_row_matching(self, row, column):
         size = int(self.board.size / len(self.board[0]))
@@ -125,7 +115,7 @@ class Grid:
             if temp != 0:
                 if temp == value:
                     print("matched")
-                    return 1
+                    return True
                 else:
                     ##                    print("break")
                     break
@@ -144,10 +134,10 @@ class Grid:
             if temp != 0:
                 if temp == value:
                     print("matched(column)")
-                    return 1
+                    return True
                 else:
                     ##                    print("break(column)")
-                    break
+                    return False
             i += 1
 
     def is_matching_with_column_neighbour(self, row, column):
@@ -161,6 +151,8 @@ class Grid:
         if self.board[row][column + 1] == value:
             print("column")
             return True
+        else:
+            return False
 
     def is_matching_with_row_neighbour(self, row, column):
         size = int(self.board.size / len(self.board[0]))
@@ -171,9 +163,75 @@ class Grid:
         value = self.board[row][column]
 
         if self.board[row + 1][column] == value:
-            print("hello")
             return True
+        else:
+            return False
+
+    def ai(self, g, depth, counter):
+        best_score = -1
+        best_move = None
+        row_size = int(self.board.size / len(self.board[0]))
+        for i in range(row_size):
+            for j in range(row_size):
+
+                if self.board[i][j] != 0:
+                    if counter == 0:
+                        self.old_board = self.board
+                        if g.is_row_matching(i, j):
+                            g.left()
+                            score = minimax()
+                            self.board = self.old_board
+                            if score > best_score:
+                                best_score = score
+                                best_move = "left"
+
+                            g.right()
+                            score = minimax()
+                            if score > best_score:
+                                best_score = score
+                                best_move = "right"
+
+
+                                
+
+
+
 
 
 g = Grid()
-g.ai(g)
+
+
+while str(input()) != "exit":
+    g.ai(g, 3, 0)
+##    g.display()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
