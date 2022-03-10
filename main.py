@@ -30,7 +30,7 @@ class Grid:
         self.board[0][0] = 4
         self.board[0][2] = 2
         self.board[1][0] = 8
-        self.board[2][0] = 8
+        self.board[2][0] = 4
         self.board[3][0] = 4
 
         self.display()
@@ -106,6 +106,33 @@ class Grid:
 
         self.state += 1
 
+    def is_matching_row_matching_with_neighbour(self):
+        size = int(self.board.size / len(self.board[0]))
+
+        for row in range(size):
+            for column in range(size - 1):
+                value = self.board[row][column]
+                if value != 0 and value == self.board[row][column + 1]:
+                    return True
+
+        return False
+
+
+
+    def is_matching_column_matching_with_neighbour(self):
+        size = int(self.board.size / len(self.board[0]))
+
+        for row in range(size - 1):
+            for column in range(size):
+                value = self.board[row][column]
+                if value != 0 and value == self.board[row + 1][column]:
+                    return True
+
+        return False
+
+
+
+
     def move_tiles(self, move):
         if move == "left":
             self.left()
@@ -151,21 +178,10 @@ class Grid:
         if depth < 1:
             return score
 
-        self.board = board
-        old_score = self.score
-
         for move in self.available_moves:
-            self.move_tiles(move)
-
-            if old_score > self.score:
-                score = old_score
-
-            self.board = board
-            self.score = score
-
-        if
-
-        return self.minimax(depth - 1, score)
+            if move == "left" or move == "right":
+                r = self.is_matching_column_matching_with_neighbour()
+                print(r)
 
 
 g = Grid()
@@ -213,29 +229,4 @@ while str(input()) != "exit":
 #                 return False
 #         i += 1
 #
-# def is_matching_with_column_neighbour(self, row, column):
-#     size = int(self.board.size / len(self.board[0]))
-#     if column == size - 1:
-#         ##            print("last element")
-#         return
-#
-#     value = self.board[row][column]
-#
-#     if self.board[row][column + 1] == value:
-#         print("column")
-#         return True
-#     else:
-#         return False
-#
-# def is_matching_with_row_neighbour(self, row, column):
-#     size = int(self.board.size / len(self.board[0]))
-#     if row == size - 1:
-#         ##            print("last element")
-#         return
-#
-#     value = self.board[row][column]
-#
-#     if self.board[row + 1][column] == value:
-#         return True
-#     else:
-#         return False
+
