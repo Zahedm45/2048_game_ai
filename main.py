@@ -4,9 +4,9 @@ from utils import compress, merge, reverse, transp
 
 
 class Grid:
-    def __init__(self, grid):
+    def __init__(self):
         self.moves = ["UP", "DOWN", "LEFT", "RIGHT"]
-        self.goal = 600
+        self.goal = 60000
         self.score = 0
         self.state = 0
         self.lost = False
@@ -43,7 +43,7 @@ class Grid:
                 for i in range(4):
                     if col[i] == 0:
                         return True
-                    if col[i] != 0 and col[i] == col[i + 1] and i < 3:
+                    if i < 3 and col[i] != 0 and col[i] == col[i + 1]:
                         return True
             return False
 
@@ -52,27 +52,44 @@ class Grid:
                 for i in range(4):
                     if col[3] == 0:
                         return True
-                    if col[i] != 0 and col[i] == col[i + 1] and i < 3:
+                    if i < 3 and col[i] != 0 and col[i] == col[i + 1]:
                         return True
             return False
 
         if move == "LEFT":
-            for row in self.grid():
+            for row in self.get_all_rows():
                 for i in range(4):
                     if row[0] == 0:
                         return True
-                    if row[i] != 0 and row[i] == row[i + 1] and i < 3:
+                    if i < 3 and row[i] != 0 and row[i] == row[i + 1]:
                         return True
             return False
 
         if move == "RIGHT":
-            for row in self.grid():
+            for row in self.get_all_rows():
                 for i in range(4):
                     if row[3] == 0:
                         return True
-                    if row[i] != 0 and row[i] == row[i + 1] and i < 3:
+                    if i < 3 and row[i] != 0 and row[i] == row[i + 1]:
                         return True
             return False
+
+    def get_specific_row(self, index):
+        """
+        Returns the row index, from left to right
+        example:
+        self.grid = [
+            [1, 2, 3, 4],
+            [5, 6, 7, 8],
+            [9, 10, 11, 12],
+            [13, 14, 15, 16]
+        ]
+        then grid.get_specific_row(2) will return [9, 10, 11, 12]
+        """
+        return list(list(self.grid)[index])
+
+    def get_all_rows(self):
+        return [self.get_specific_row(row_index) for row_index in range(4)]
 
     def get_specific_column(self, index):
         """
@@ -96,23 +113,7 @@ class Grid:
             self.win = True
 
     def have_lost(self):
-        for i in range(3):
-            for j in range(3):
-                if (
-                    self.grid[i][j] == self.grid[i + 1][j]
-                    or self.grid[i][j] == self.grid[i][j + 1]
-                ):
-                    pass
-
-        for j in range(3):
-            if self.grid[3][j] == self.grid[3][j + 1]:
-                pass
-
-        for i in range(3):
-            if self.grid[i][3] == self.grid[i + 1][3]:
-                pass
-
-        self.lost = True
+        return len(self.get_available_moves()) == 0
 
     def new_values(self):
         i, j = random.randint(0, 3), random.randint(0, 3)
@@ -211,6 +212,11 @@ class Grid:
 g = Grid()
 
 while not (g.lost or g.win):
-    g.move(random.choice(["UP", "DOWN", "LEFT", "RIGHT"]))
+    available_moves = g.get_available_moves()
+    if available_moves:
+        g.move(random.choice(available_moves))
+    else:
+        g.lost = True
+        break
 
 print("YOU LOSE" if g.lost else "YOU WIN")
