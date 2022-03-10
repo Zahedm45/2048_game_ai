@@ -20,7 +20,7 @@ class Grid:
 
         self.grid[i_1[0]][i_1[1]], self.grid[i_2[0]][i_2[1]] = 2, 2
 
-        self.display("")
+        self.display("Initial board")
 
     def get_available_moves(self):
         """
