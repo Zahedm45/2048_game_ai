@@ -89,6 +89,9 @@ class Grid:
         return list(list(self.grid)[index])
 
     def get_all_rows(self):
+        """
+        Return all columns (left to right)
+        """
         return [self.get_specific_row(row_index) for row_index in range(4)]
 
     def get_specific_column(self, index):
@@ -106,16 +109,28 @@ class Grid:
         return [row[index] for row in self.grid]
 
     def get_all_columns(self):
+        """
+        Return all columns (top to bottom)
+        """
         return [self.get_specific_column(col_index) for col_index in range(4)]
 
     def have_win(self):
+        """
+        Changes the win variable to True if the player won
+        """
         if self.score >= self.goal:
             self.win = True
 
     def have_lost(self):
+        """
+        Changes the lost variable to True if the player lost
+        """
         return len(self.get_available_moves()) == 0
 
     def new_values(self):
+        """
+        Randomly add a 2 or 4
+        """
         i, j = random.randint(0, 3), random.randint(0, 3)
 
         while self.grid[i][j] != 0:
@@ -125,6 +140,9 @@ class Grid:
         self.grid[i][j] = new_val
 
     def move(self, move):
+        """
+        Carry out a move and checks for win/lose, and displays the new board
+        """
         if move == "UP":
             self.up()
         elif move == "DOWN":
@@ -153,6 +171,9 @@ class Grid:
         self.have_lost()
 
     def left(self):
+        """
+        Move to the left
+        """
         arr1 = self.grid.copy()
 
         arr2 = compress(arr1)
@@ -160,6 +181,9 @@ class Grid:
         self.grid = compress(arr3)
 
     def right(self):
+        """
+        Move to the right
+        """
         arr1 = self.grid.copy()
 
         arr2 = reverse(arr1)
@@ -169,6 +193,9 @@ class Grid:
         self.grid = reverse(arr5)
 
     def up(self):
+        """
+        Move up
+        """
         arr1 = self.grid.copy()
 
         arr2 = transp(arr1)
@@ -178,6 +205,9 @@ class Grid:
         self.grid = transp(arr5)
 
     def down(self):
+        """
+        Move down
+        """
         arr1 = self.grid.copy()
 
         arr2 = transp(arr1)
@@ -189,6 +219,9 @@ class Grid:
         self.grid = transp(arr7)
 
     def display(self, move):
+        """
+        This is the ui: dislays the board and some info in the terminal
+        """
         print("-----------------------------------------")
         print(
             "State: "
