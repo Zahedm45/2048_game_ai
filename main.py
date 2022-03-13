@@ -20,18 +20,44 @@ class Grid:
 
         ##        self.board[i_1[0]][i_1[1]], self.board[i_2[0]][i_2[1]] = 2, 2
 
-        # self.board[0][2] = 2
-        # self.board[0][3] = 2
         # self.board[0][0] = 2
-        # self.board[3][2] = 2
+        # self.board[0][1] = 8
+        # self.board[0][2] = 4
+        # self.board[0][3] = 2
         #
-        # self.board[2][1] = 10
-        # self.board[2][2] = 10
-        self.board[0][0] = 4
-        self.board[0][2] = 2
-        self.board[1][0] = 8
-        self.board[2][0] = 4
-        self.board[3][0] = 4
+        # self.board[1][0] = 2
+        # self.board[1][1] = 16
+        # self.board[1][2] = 4
+        # self.board[1][3] = 2
+        #
+        # self.board[2][0] = 2
+        # self.board[2][1] = 4
+        # self.board[2][2] = 32
+        # self.board[2][3] = 4
+        #
+        # self.board[3][0] = 4
+        # self.board[3][1] = 32
+        # self.board[3][2] = 2
+        # self.board[3][3] = 8
+
+
+
+
+
+
+        # self.board[1][0] = 4
+        # self.board[2][0] = 8
+        # self.board[3][0] = 8
+        # self.board[3][1] = 4
+
+
+        # self.board[0][3] = 4
+        # self.board[0][2] = 4
+        #
+        #
+        self.board[2][3] = 2
+        self.board[3][3] = 4
+
 
         self.display()
 
@@ -41,18 +67,20 @@ class Grid:
             ij = [random.randint(0, 3), random.randint(0, 3)]
         self.board[ij[0]][ij[1]] = random.choices([2, 4], [0.9, 0.1])[0]
 
-    def left(self):
+    def left(self, is_game_play):
         arr1 = self.board.copy()
 
         arr2 = compress(arr1)
         arr3, self.score = merge(arr2, self.score)
         self.board = compress(arr3)
 
-        self.new_values()
+        if is_game_play:
+            self.new_values()
+
 
     ##        self.display()
 
-    def right(self):
+    def right(self, is_game_play):
         arr1 = self.board.copy()
 
         arr2 = reverse(arr1)
@@ -61,11 +89,12 @@ class Grid:
         arr5 = compress(arr4)
         self.board = reverse(arr5)
 
-        self.new_values()
+        if is_game_play:
+            self.new_values()
 
     ##        self.display()
 
-    def up(self):
+    def up(self, is_game_play):
         arr1 = self.board.copy()
 
         arr2 = transp(arr1)
@@ -74,11 +103,12 @@ class Grid:
         arr5 = compress(arr4)
         self.board = transp(arr5)
 
-        self.new_values()
+        if is_game_play:
+            self.new_values()
 
     ##        self.display()
 
-    def down(self):
+    def down(self, is_game_play):
         arr1 = self.board.copy()
 
         arr2 = transp(arr1)
@@ -89,7 +119,8 @@ class Grid:
         arr7 = reverse(arr6)
         self.board = transp(arr7)
 
-        self.new_values()
+        if is_game_play:
+            self.new_values()
 
     ##        self.display()
 
@@ -106,8 +137,8 @@ class Grid:
 
         self.state += 1
 
-    def is_matching_row_matching_with_neighbour(self):
-        size = int(self.board.size / len(self.board[0]))
+    def is_row_matching(self):
+        size = 4
 
         for row in range(size):
             for column in range(size - 1):
@@ -118,9 +149,8 @@ class Grid:
         return False
 
 
-
-    def is_matching_column_matching_with_neighbour(self):
-        size = int(self.board.size / len(self.board[0]))
+    def is_column_matching(self):
+        size = 4
 
         for row in range(size - 1):
             for column in range(size):
@@ -131,17 +161,15 @@ class Grid:
         return False
 
 
-
-
-    def move_tiles(self, move):
+    def move_tiles(self, move, is_game_play):
         if move == "left":
-            self.left()
+            self.left(is_game_play)
         elif move == "right":
-            self.right()
+            self.right(is_game_play)
         elif move == "up":
-            self.up()
+            self.up(is_game_play)
         elif move == "down":
-            self.down()
+            self.down(is_game_play)
 
     def ai_move(self):
         old_board = self.board
@@ -154,7 +182,9 @@ class Grid:
         counter = 0
 
         for move in self.available_moves:
-            score = self.minimax(5, self.score, self.board)
+            self.move_tiles(move, False)
+            score_after_first_move = self.score - old_score
+            score = self.minimax(7, self.board, self.score)
 
             if score > best_score:
                 best_score = score
@@ -171,24 +201,39 @@ class Grid:
             print("random")
 
         print(best_move)
-        self.move_tiles(best_move)
+        self.move_tiles(best_move, True)
         self.display()
 
-    def minimax(self, depth, score, board):
+    def minimax(self, depth, board, score):
+
         if depth < 1:
             return score
 
+        self.board = board
+        self.score = score
+
         for move in self.available_moves:
             if move == "left" or move == "right":
-                r = self.is_matching_column_matching_with_neighbour()
-                print(r)
+                if self.is_row_matching():
+                    self.move_tiles(move, False)
+                    return self.minimax(depth - 1, self.board, self.score)
+            else:
+                if self.is_column_matching():
+                    self.move_tiles(move, False)
+                    return self.minimax(depth - 1, self.board, self.score)
+
+        return score
+
+
 
 
 g = Grid()
 
 while str(input()) != "exit":
+    # g.move_tiles(random.choice(g.available_moves))
+    # g.display()
     g.ai_move()
-##    g.display()
+   ## g.move_tiles("down", True)
 
 
 # def is_row_matching(self, row, column):
