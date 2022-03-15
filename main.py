@@ -20,25 +20,25 @@ class Grid:
 
         ##        self.board[i_1[0]][i_1[1]], self.board[i_2[0]][i_2[1]] = 2, 2
 
-        # self.board[0][0] = 2
-        # self.board[0][1] = 8
-        # self.board[0][2] = 4
-        # self.board[0][3] = 2
-        #
-        # self.board[1][0] = 2
-        # self.board[1][1] = 16
-        # self.board[1][2] = 4
-        # self.board[1][3] = 2
-        #
-        # self.board[2][0] = 2
-        # self.board[2][1] = 4
-        # self.board[2][2] = 32
-        # self.board[2][3] = 4
-        #
-        # self.board[3][0] = 4
-        # self.board[3][1] = 32
-        # self.board[3][2] = 2
-        # self.board[3][3] = 8
+        self.board[0][0] = 2
+        self.board[0][1] = 256
+        self.board[0][2] = 4
+        self.board[0][3] = 2
+
+        self.board[1][0] = 2
+        self.board[1][1] = 64
+        self.board[1][2] = 8
+        self.board[1][3] = 2
+
+        self.board[2][0] = 8
+        self.board[2][1] = 512
+        self.board[2][2] = 8
+        self.board[2][3] = 2
+
+        self.board[3][0] = 8
+        self.board[3][1] = 4
+        self.board[3][2] = 2
+        self.board[3][3] = 4
 
 
 
@@ -62,6 +62,7 @@ class Grid:
         self.display()
 
     def new_values(self):
+        print("new value")
         ij = [random.randint(0, 3), random.randint(0, 3)]
         while self.board[ij[0]][ij[1]] != 0:
             ij = [random.randint(0, 3), random.randint(0, 3)]
@@ -183,8 +184,7 @@ class Grid:
 
         for move in self.available_moves:
             self.move_tiles(move, False)
-            score_after_first_move = self.score - old_score
-            score = self.minimax(7, self.board, self.score)
+            score = self.minimax(2, self.board, self.score)
 
             if score > best_score:
                 best_score = score
