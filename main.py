@@ -177,6 +177,8 @@ class Grid:
         old_score = self.score
         old_state = self.state
 
+        score_after_next_move = {}
+
         best_move = None
         best_score = self.score
 
@@ -184,7 +186,8 @@ class Grid:
 
         for move in self.available_moves:
             self.move_tiles(move, False)
-            score = self.minimax(2, self.board, self.score)
+            score_after_next_move[move] = self.score
+            score = self.minimax(1, self.board, self.score)
 
             if score > best_score:
                 best_score = score
