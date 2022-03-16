@@ -203,17 +203,6 @@ class Grid:
             self.score = old_score
             self.state = old_state
 
-
-            ##print(move, " score after the first move ",score_after_next_move, " score minimax",  score)
-            # if score > best_score:
-            #     best_score = score
-            #     best_move = move
-            # elif score == best_score and score_after_next_move > 0:
-            #     best_score = score
-            #     best_move = move
-
-
-
         if best_move.move == "None":
             best_move.move = random.choice(self.available_moves)
             print("random")
@@ -225,12 +214,9 @@ class Grid:
 
     def minimax(self, depth, board, leaf_values):
         if depth < 1:
-            #print("leaf node ", "score ", self.score)
-            #self.display()
             leaf_values.append(self.score)
             return 0
 
-       # print("how many ", depth)
         self.score = 0
         for move in self.available_moves:
             self.board = board
@@ -238,36 +224,6 @@ class Grid:
             self.minimax(depth - 1, self.board, leaf_values)
 
         return max(leaf_values)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        # self.board = board
-        # old_score = self.score
-        #
-        # self.move_tiles("left", False)
-        # self.board = board
-        #
-        # if self.is_point_available("left"):
-        #     score += self.score - old_score
-        #
-        #
-        #
-        # self.move_tiles("right", False)
-        # self.move_tiles("up", False)
-        # self.move_tiles("down", False)
-
-
 
 
 
