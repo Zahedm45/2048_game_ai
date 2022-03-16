@@ -1,6 +1,15 @@
+from dataclasses import dataclass
 import random
 import numpy as np
 from utils import compress, merge, reverse, transp
+
+@dataclass
+class Node:
+    move: str
+    score: int
+    score_after_next_move: int
+
+
 
 
 class Grid:
@@ -20,49 +29,42 @@ class Grid:
 
         ##        self.board[i_1[0]][i_1[1]], self.board[i_2[0]][i_2[1]] = 2, 2
 
-        self.board[0][0] = 2
-        self.board[0][1] = 256
-        self.board[0][2] = 4
-        self.board[0][3] = 2
-
-        self.board[1][0] = 2
-        self.board[1][1] = 64
-        self.board[1][2] = 8
-        self.board[1][3] = 2
-
-        self.board[2][0] = 8
-        self.board[2][1] = 512
-        self.board[2][2] = 8
-        self.board[2][3] = 2
-
-        self.board[3][0] = 8
-        self.board[3][1] = 4
-        self.board[3][2] = 2
-        self.board[3][3] = 4
-
-
-
-
-
+        # self.board[0][0] = 2
+        # self.board[0][1] = 256
+        # self.board[0][2] = 4
+        # self.board[0][3] = 2
+        #
+        # self.board[1][0] = 2
+        # self.board[1][1] = 64
+        # self.board[1][2] = 8
+        # self.board[1][3] = 2
+        #
+        # self.board[2][0] = 8
+        # self.board[2][1] = 512
+        # self.board[2][2] = 8
+        # self.board[2][3] = 2
+        #
+        # self.board[3][0] = 8
+        # self.board[3][1] = 4
+        # self.board[3][2] = 2
+        # self.board[3][3] = 4
 
         # self.board[1][0] = 4
         # self.board[2][0] = 8
         # self.board[3][0] = 8
         # self.board[3][1] = 4
 
-
         # self.board[0][3] = 4
         # self.board[0][2] = 4
         #
         #
-        self.board[2][3] = 2
-        self.board[3][3] = 4
-
+        self.board[0][0] = 2
+        self.board[0][1] = 4
+        self.board[1][1] = 2
 
         self.display()
 
     def new_values(self):
-        print("new value")
         ij = [random.randint(0, 3), random.randint(0, 3)]
         while self.board[ij[0]][ij[1]] != 0:
             ij = [random.randint(0, 3), random.randint(0, 3)]
@@ -78,7 +80,6 @@ class Grid:
         if is_game_play:
             self.new_values()
 
-
     ##        self.display()
 
     def right(self, is_game_play):
@@ -92,6 +93,7 @@ class Grid:
 
         if is_game_play:
             self.new_values()
+
 
     ##        self.display()
 
@@ -149,7 +151,6 @@ class Grid:
 
         return False
 
-
     def is_column_matching(self):
         size = 4
 
@@ -160,7 +161,6 @@ class Grid:
                     return True
 
         return False
-
 
     def move_tiles(self, move, is_game_play):
         if move == "left":
@@ -177,66 +177,141 @@ class Grid:
         old_score = self.score
         old_state = self.state
 
-        score_after_next_move = {}
-
-        best_move = None
-        best_score = self.score
-
-        counter = 0
+        best_move = Node("None", 0, 0)
 
         for move in self.available_moves:
-            self.move_tiles(move, False)
-            score_after_next_move[move] = self.score
-            score = self.minimax(1, self.board, self.score)
+            self.move_tiles(move, True)
+            score_after_next_move = self.score - old_score
 
-            if score > best_score:
-                best_score = score
-                best_move = move
-            elif score == best_score:
-                counter += 1
+            allocated_tiles = self.allocated_tiles()
+            depth = 15 - allocated_tiles
+            if depth > 4:
+                depth = 4
+            leaf_node_val = []
+
+            score_after_minimax = self.minimax(depth, self.board, leaf_node_val)
+            total_score = score_after_minimax + score_after_next_move
+
+            print(move, " score after the first move ",score_after_next_move, " score minimax",  score_after_minimax, " = ", total_score)
+            if total_score > best_move.score:
+                best_move = Node(move, total_score, score_after_next_move)
+
+            elif total_score == best_move.score and score_after_next_move > best_move.score_after_next_move:
+                best_move = Node(move, total_score, score_after_next_move)
 
             self.board = old_board
             self.score = old_score
             self.state = old_state
 
-        if counter == len(self.available_moves):
-            best_move = random.choice(self.available_moves)
+
+            ##print(move, " score after the first move ",score_after_next_move, " score minimax",  score)
+            # if score > best_score:
+            #     best_score = score
+            #     best_move = move
+            # elif score == best_score and score_after_next_move > 0:
+            #     best_score = score
+            #     best_move = move
+
+
+
+        if best_move.move == "None":
+            best_move.move = random.choice(self.available_moves)
             print("random")
 
-        print(best_move)
-        self.move_tiles(best_move, True)
+        print(best_move.move)
+        self.move_tiles(best_move.move, True)
         self.display()
 
-    def minimax(self, depth, board, score):
 
+    def minimax(self, depth, board, leaf_values):
         if depth < 1:
-            return score
+            #print("leaf node ", "score ", self.score)
+            #self.display()
+            leaf_values.append(self.score)
+            return 0
 
-        self.board = board
-        self.score = score
-
+       # print("how many ", depth)
+        self.score = 0
         for move in self.available_moves:
-            if move == "left" or move == "right":
-                if self.is_row_matching():
-                    self.move_tiles(move, False)
-                    return self.minimax(depth - 1, self.board, self.score)
-            else:
-                if self.is_column_matching():
-                    self.move_tiles(move, False)
-                    return self.minimax(depth - 1, self.board, self.score)
+            self.board = board
+            self.move_tiles(move, True)
+            self.minimax(depth - 1, self.board, leaf_values)
 
-        return score
+        return max(leaf_values)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+        # self.board = board
+        # old_score = self.score
+        #
+        # self.move_tiles("left", False)
+        # self.board = board
+        #
+        # if self.is_point_available("left"):
+        #     score += self.score - old_score
+        #
+        #
+        #
+        # self.move_tiles("right", False)
+        # self.move_tiles("up", False)
+        # self.move_tiles("down", False)
+
+
+
+
+
+
+    def allocated_tiles(self):
+        size = 4
+        counter = 0
+        for row in range(size):
+            for column in range(size):
+                value = self.board[row][column]
+                if value != 0:
+                    counter += 1
+
+        return counter
+
+    def is_point_available(self, move):
+        if move == "left" or move == "right":
+            return self.is_row_matching()
+        else:
+            return self.is_column_matching()
 
 g = Grid()
 
 while str(input()) != "exit":
     # g.move_tiles(random.choice(g.available_moves))
     # g.display()
-    g.ai_move()
-   ## g.move_tiles("down", True)
+
+    for i in range(1):
+        g.ai_move()
+
+## g.move_tiles("down", True)
+
+
+# for move in self.available_moves:
+#     if move == "left" or move == "right":
+#         if self.is_row_matching():
+#             self.move_tiles(move, False)
+#             return self.minimax(depth - 1, self.board, self.score)
+#     else:
+#         if self.is_column_matching():
+#             self.move_tiles(move, False)
+#             return self.minimax(depth - 1, self.board, self.score)
+#
+# return score
 
 
 # def is_row_matching(self, row, column):
@@ -277,4 +352,3 @@ while str(input()) != "exit":
 #                 return False
 #         i += 1
 #
-
