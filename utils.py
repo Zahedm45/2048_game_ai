@@ -37,3 +37,58 @@ def transp(mat):
         for j in range(4):
             new_mat[i][j] = mat[j][i]
     return np.array(new_mat)
+
+
+
+def is_move_available(self, move):
+    size = 4
+    if move == "left":
+        if self.is_row_matching():
+            return True
+        else:
+            for row in range(size):
+                for column in range(size - 1):
+                    val = self.board[row][column]
+                    if val == 0 and self.board[row][column + 1] != 0:
+                        return True
+            return False
+
+    elif move == "right":
+        if self.is_row_matching():
+            return True
+        else:
+            for row in range(size):
+                for column in range(size - 1):
+                    val = self.board[row][column]
+                    if val != 0 and self.board[row][column + 1] == 0:
+                        return True
+
+            return False
+
+    elif move == "up":
+        if self.is_column_matching():
+            return True
+        else:
+            for row in range(size - 1):
+                for column in range(size):
+                    val = self.board[row][column]
+                    if val == 0 and self.board[row + 1][column] != 0:
+                        return True
+            return False
+
+    elif move == "down":
+        if self.is_column_matching():
+            return True
+        else:
+            for row in range(size - 1):
+                for column in range(size):
+                    val = self.board[row][column]
+                    if val != 0 and self.board[row + 1][column] == 0:
+                        return True
+            return False
+    else:
+        return False
+
+
+def print_move_not_possible(move):
+    print("Move: ", move, " is not possible!")
