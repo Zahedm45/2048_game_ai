@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 import random
 import numpy as np
-from utils import compress, merge, reverse, transp, is_move_available, print_move_not_possible
+from utils import compress, merge, reverse, transp, is_move_available, print_move_not_possible, \
+    minimax_for_clean_wrapper
 
 
 @dataclass
@@ -185,6 +186,8 @@ class Grid:
     def clean_up_board(self):
         ##is_move_available(self, move)
 
+        minimax_for_clean_wrapper(self)
+        return
         old_board = self.board
         old_score = self.score
         old_state = self.state
@@ -220,7 +223,7 @@ class Grid:
 
     def ai_move(self):
         allocated_tiles = self.allocated_tiles()
-        if allocated_tiles > 12:
+        if allocated_tiles > 7:
             self.clean_up_board()
             return
 
@@ -235,12 +238,12 @@ class Grid:
             score_after_next_move = self.score - old_score
 
 
-            depth = 15 - allocated_tiles
-            if depth > 4:
-                depth = 4
+            # depth = 15 - allocated_tiles
+            # if depth > 4:
+            #     depth = 4
 
             leaf_node_val = []
-            ##depth = 4
+            depth = 6
             score_after_minimax = self.minimax(depth, self.board, leaf_node_val)
             total_score = score_after_minimax + score_after_next_move
 
@@ -308,6 +311,7 @@ class Grid:
     def minimax(self, depth, board, leaf_values):
         if depth < 1:
             leaf_values.append(self.score)
+            print("allocated tiles are ", self.allocated_tiles())
             return 0
 
         self.score = 0
@@ -343,13 +347,8 @@ class Grid:
 g = Grid()
 
 while str(input()) != "exit":
-    # g.move_tiles(random.choice(g.available_moves))
-    # g.display()
-    # if is_move_available(g, "up"):
-    #     g.up(True)
+   ## minimax_for_clean_wrapper(g)
+    g.ai_move()
 
-
-
-    ##g.display()
-    for i in range(50):
-        g.ai_move()
+# for i in range(50):
+    #     g.ai_move()
