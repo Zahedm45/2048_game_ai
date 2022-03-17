@@ -226,11 +226,11 @@ class Grid:
         #     self.increase_free_tiles -= 1
         #     return
 
-        free_tiles = self.get_free_tiles()
-        if free_tiles < 7:
-            self.increase_free_tiles = 3
-            minimax_for_clean_wrapper(self)
-            return
+        # free_tiles = self.get_free_tiles()
+        # if free_tiles < 7:
+        #     self.increase_free_tiles = 3
+        #     minimax_for_clean_wrapper(self)
+        #     return
 
         old_board = self.board
         old_score = self.score
@@ -248,7 +248,7 @@ class Grid:
             #     depth = 4
 
             leaf_node_val = []
-            depth = 6
+            depth = 10
             score_after_minimax = self.minimax(depth, self.board, leaf_node_val)
             total_score = score_after_minimax + score_after_next_move
             # if total_score < 32 :
@@ -269,7 +269,10 @@ class Grid:
 
         if best_move.move == "None":
             best_move.move = self.get_best_possible_move(self.board)
-            print("random")
+
+        if best_move.move == "None":
+            print("Game lost!")
+            exit()
 
         print(best_move.move)
         self.move_tiles(best_move.move, True)
@@ -355,9 +358,6 @@ class Grid:
 g = Grid()
 
 while str(input()) != "exit":
-
-    #g.ai_move()
-
     for i in range(400):
-        g.ai_move()
-        #minimax_for_clean_wrapper(g)
+        #g.ai_move()
+        minimax_for_clean_wrapper(g)

@@ -96,6 +96,18 @@ def print_move_not_possible(move):
     print("Move: ", move, " is not possible!")
 
 
+def highest_tile_score(board):
+    size = 4
+    val1 = 0
+    for row in range(size):
+        for column in range(size):
+            val2 = board[row][column]
+            if val2 > val1:
+                val1 = val2
+
+    return val1
+
+
 
 
 def minimax_for_clean_wrapper(self):
@@ -105,13 +117,15 @@ def minimax_for_clean_wrapper(self):
     old_free_tiles = self.get_free_tiles()
     best_move = Node("None", 0, 0)
 
-    depth = old_free_tiles
-    if depth > 6:
-        depth = 6
+    # depth = old_free_tiles
+    # if depth > 6:
+    #     depth = 6
     ##depth = 5
+    depth = 10
+
     for move in self.available_moves:
         if not is_move_available(self, move):
-            print("not possible ", move)
+            #print("not possible ", move)
             continue
 
         self.move_tiles(move, True)
@@ -120,9 +134,12 @@ def minimax_for_clean_wrapper(self):
         leaf_values = []
         new_free_tiles = minimax_for_free_tiles(self, depth, self.board, leaf_values)
         total_free_tiles = free_tiles_after_first_move + new_free_tiles
-        #print(move, " after first move: ", free_tiles_after_first_move, " after minimax ", new_free_tiles,  " = ", total_free_tiles, " depth: ", depth)
+        print(move, " after first move: ", free_tiles_after_first_move, " after minimax ", new_free_tiles,  " = ", total_free_tiles)
 
         if total_free_tiles > best_move.free_tiles:
+            best_move = Node(move, total_free_tiles, free_tiles_after_first_move)
+
+        elif total_free_tiles == best_move.free_tiles and best_move.free_tiles_after_first_move < free_tiles_after_first_move:
             best_move = Node(move, total_free_tiles, free_tiles_after_first_move)
 
         self.board = old_board
@@ -131,12 +148,12 @@ def minimax_for_clean_wrapper(self):
 
     if best_move.move == "None":
         best_move.move = self.get_best_possible_move(self.board)
-        print("random")
+        print("Next best random")
 
     if best_move.move == "None":
         print("Game lost!")
         exit()
-    print(best_move, " from minimax wrapper ")
+    print(best_move.move)
     self.move_tiles(best_move.move, True)
     self.display()
 
@@ -145,8 +162,9 @@ def minimax_for_clean_wrapper(self):
 
 def minimax_for_free_tiles(self, depth, board, leaf_values):
     if depth < 1:
-        leaf_values.append(self.get_free_tiles())
+        #leaf_values.append(self.get_free_tiles())
         ##print("allocated tiles: ", self.get_free_tiles())
+        leaf_values.append(highest_tile_score(board))
         return 0
 
     self.score = 0
