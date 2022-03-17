@@ -96,6 +96,7 @@ def print_move_not_possible(move):
     print("Move: ", move, " is not possible!")
 
 
+
 def highest_tile_score(board):
     size = 4
     val1 = 0
@@ -121,7 +122,7 @@ def minimax_for_clean_wrapper(self):
     # if depth > 6:
     #     depth = 6
     ##depth = 5
-    depth = 10
+    depth = 3
 
     for move in self.available_moves:
         if not is_move_available(self, move):
@@ -162,12 +163,11 @@ def minimax_for_clean_wrapper(self):
 
 def minimax_for_free_tiles(self, depth, board, leaf_values):
     if depth < 1:
-        #leaf_values.append(self.get_free_tiles())
+        leaf_values.append(self.get_free_tiles())
         ##print("allocated tiles: ", self.get_free_tiles())
-        leaf_values.append(highest_tile_score(board))
         return 0
 
-    self.score = 0
+    #self.score = 0
     for move in self.available_moves:
         if is_move_available(self, move):
             self.board = board

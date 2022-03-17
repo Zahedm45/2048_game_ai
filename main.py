@@ -221,16 +221,10 @@ class Grid:
 
 
     def ai_move(self):
-        # if self.increase_free_tiles > 0:
-        #     minimax_for_clean_wrapper(self)
-        #     self.increase_free_tiles -= 1
-        #     return
 
-        # free_tiles = self.get_free_tiles()
-        # if free_tiles < 7:
-        #     self.increase_free_tiles = 3
-        #     minimax_for_clean_wrapper(self)
-        #     return
+        if self.get_free_tiles() < 4:
+            minimax_for_clean_wrapper(self)
+            return
 
         old_board = self.board
         old_score = self.score
@@ -240,7 +234,7 @@ class Grid:
 
         for move in self.available_moves:
             self.move_tiles(move, True)
-            score_after_next_move = self.score - old_score
+            score_after_first_move = self.score - old_score
 
 
             # depth = 15 - allocated_tiles
@@ -248,20 +242,65 @@ class Grid:
             #     depth = 4
 
             leaf_node_val = []
-            depth = 10
-            score_after_minimax = self.minimax(depth, self.board, leaf_node_val)
-            total_score = score_after_minimax + score_after_next_move
+            depth = 4
+            score_after_minimax = self.minimax(depth, self.board, leaf_node_val, 0)
+            total_score = score_after_minimax + score_after_first_move
             # if total_score < 32 :
             #     minimax_for_clean_wrapper(self)
             #     return
+            #percent = best_move.score
+            # if best_move.score != 0:
+            #     percent = round(total_score / best_move.score, 1)
 
-            print(move, " score after the first move ", score_after_next_move, " score minimax", score_after_minimax,
-                  " = ", total_score)
+
+
+        #     if score_after_first_move > best_move.score_after_first_move and percent > 1.1:
+        # best_move = Node(move, total_score, score_after_first_move)
+            percent = 0
+            # if total_score != 0 and best_move.score != 0:
+            #     percent = round(total_score / best_move.score, 1)
+            #
+            #     if score_after_first_move >= best_move.score_after_next_move and percent > 1.1:
+            #         best_move = Node(move, total_score, score_after_first_move)
+            #
+            #     elif total_score == best_move.score and score_after_first_move > best_move.score_after_next_move:
+            #         best_move = Node(move, total_score, score_after_first_move)
+            #
+            #     elif percent > 1.4:
+            #         best_move = Node(move, total_score, score_after_first_move)
+            #
+            #     # elif total_score > best_move.score and best_move.score == 0:
+            #     #     best_move = Node(move, total_score, score_after_first_move)
+            #
+            # elif best_move.score == 0 or score_after_first_move == 0:
+            #     if total_score > best_move.score:
+            #         best_move = Node(move, total_score, score_after_first_move)
+            #
+            #
+
+
             if total_score > best_move.score:
-                best_move = Node(move, total_score, score_after_next_move)
 
-            elif total_score == best_move.score and score_after_next_move > best_move.score_after_next_move:
-                best_move = Node(move, total_score, score_after_next_move)
+                # if best_move.score == 0:
+                #     best_move = Node(move, total_score, score_after_first_move)
+
+                if best_move.score_after_next_move > score_after_first_move:
+                    percent = round(total_score / best_move.score, 1)
+                    if percent > 1.1:
+                        best_move = Node(move, total_score, score_after_first_move)
+
+                else:
+                    best_move = Node(move, total_score, score_after_first_move)
+
+            elif total_score == best_move.score and score_after_first_move > best_move.score_after_next_move:
+                best_move = Node(move, total_score, score_after_first_move)
+
+
+
+
+
+            print(move, " score after the first move ", score_after_first_move, " score minimax", score_after_minimax,
+                  " = ", total_score, " percent: ",  best_move.score, " / total = ", percent)
 
             self.board = old_board
             self.score = old_score
@@ -269,6 +308,7 @@ class Grid:
 
         if best_move.move == "None":
             best_move.move = self.get_best_possible_move(self.board)
+            print("Random!")
 
         if best_move.move == "None":
             print("Game lost!")
@@ -319,20 +359,22 @@ class Grid:
 
 
 
-    def minimax(self, depth, board, leaf_values):
+    def minimax(self, depth, board, leaf_values, score):
         if depth < 1:
-            leaf_values.append(self.score)
+            #leaf_values.append(self.score)
+            leaf_values.append(score)
             return 0
+        #self.score = score
 
-        self.score = 0
         for move in self.available_moves:
             if is_move_available(self, move):
                 self.board = board
+                self.score = score
                 self.move_tiles(move, True)
-                self.minimax(depth - 1, self.board, leaf_values)
+                self.minimax(depth - 1, self.board, leaf_values, self.score)
 
             else:
-                self.minimax(0, self.board, leaf_values)
+                self.minimax(0, self.board, leaf_values, score)
 
 
         return max(leaf_values)
@@ -358,6 +400,6 @@ class Grid:
 g = Grid()
 
 while str(input()) != "exit":
-    for i in range(400):
-        #g.ai_move()
-        minimax_for_clean_wrapper(g)
+    for i in range(1200):
+        g.ai_move()
+        #minimax_for_clean_wrapper(g)
