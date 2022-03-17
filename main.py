@@ -14,6 +14,7 @@ class Node:
 
 class Grid:
     available_moves = ["left", "right", "up", "down"]
+    increase_free_tiles = 0
 
     # old_board = 0
     # old_score = 0
@@ -65,7 +66,7 @@ class Grid:
         self.display()
 
     def new_values(self):
-        if self.allocated_tiles() == 16:
+        if self.get_free_tiles() == 0:
             return
 
         ij = [random.randint(0, 3), random.randint(0, 3)]
@@ -186,8 +187,6 @@ class Grid:
     def clean_up_board(self):
         ##is_move_available(self, move)
 
-        minimax_for_clean_wrapper(self)
-        return
         old_board = self.board
         old_score = self.score
         old_state = self.state
@@ -199,7 +198,7 @@ class Grid:
                 continue
 
             self.move_tiles(move, True)
-            new_free_tiles = 16 - self.allocated_tiles()
+            new_free_tiles = self.get_free_tiles()
             if new_free_tiles > free_tiles:
                 best_move = move
                 free_tiles = new_free_tiles
@@ -222,9 +221,15 @@ class Grid:
 
 
     def ai_move(self):
-        allocated_tiles = self.allocated_tiles()
-        if allocated_tiles > 7:
-            self.clean_up_board()
+        # if self.increase_free_tiles > 0:
+        #     minimax_for_clean_wrapper(self)
+        #     self.increase_free_tiles -= 1
+        #     return
+
+        free_tiles = self.get_free_tiles()
+        if free_tiles < 7:
+            self.increase_free_tiles = 3
+            minimax_for_clean_wrapper(self)
             return
 
         old_board = self.board
@@ -246,6 +251,9 @@ class Grid:
             depth = 6
             score_after_minimax = self.minimax(depth, self.board, leaf_node_val)
             total_score = score_after_minimax + score_after_next_move
+            # if total_score < 32 :
+            #     minimax_for_clean_wrapper(self)
+            #     return
 
             print(move, " score after the first move ", score_after_next_move, " score minimax", score_after_minimax,
                   " = ", total_score)
@@ -311,7 +319,6 @@ class Grid:
     def minimax(self, depth, board, leaf_values):
         if depth < 1:
             leaf_values.append(self.score)
-            print("allocated tiles are ", self.allocated_tiles())
             return 0
 
         self.score = 0
@@ -324,17 +331,18 @@ class Grid:
             else:
                 self.minimax(0, self.board, leaf_values)
 
+
         return max(leaf_values)
 
-    def allocated_tiles(self):
+    def get_free_tiles(self):
         size = 4
-        counter = 0
+        counter = 16
         for row in range(size):
             for column in range(size):
                 value = self.board[row][column]
                 if value != 0:
-                    counter += 1
-
+                    counter -= 1
+        #print("from free tiles ", counter)
         return counter
 
     def is_point_available(self, move):
@@ -347,8 +355,9 @@ class Grid:
 g = Grid()
 
 while str(input()) != "exit":
-   ## minimax_for_clean_wrapper(g)
-    g.ai_move()
 
-# for i in range(50):
-    #     g.ai_move()
+    #g.ai_move()
+
+    for i in range(400):
+        g.ai_move()
+        #minimax_for_clean_wrapper(g)
