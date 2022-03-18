@@ -396,6 +396,6 @@ class Grid:
 g = Grid()
 
 while str(input()) != "exit":
-    for i in range(1200):
+    for i in range(500):
         g.ai_move()
         #minimax_for_clean_wrapper(g)
