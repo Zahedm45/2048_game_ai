@@ -235,20 +235,19 @@ class Grid:
         old_score = self.score
         old_state = self.state
 
-        self.depth = 7
+        #self.depth = 7
 
-        # if self.state == 100 :
-        #     self.depth = 6
-        # elif self.state == 200:
-        #     self.depth = 8
-        # elif self.state == 300:
-        #     self.depth = 9
+        if self.state == 100 :
+            self.depth = 4
+        elif self.state == 200:
+            self.depth = 5
+        elif self.state == 300:
+            self.depth = 6
         # elif self.state == 400:
-        #     self.depth = 12
+        #     self.depth = 4
         # elif self.state == 500:
-        #     self.depth = 30
-        # elif self.state == 700:
-        #     self.depth = 40
+        #     self.depth = 3
+
 
 
 
@@ -264,9 +263,11 @@ class Grid:
             total_score = score_after_minimax + score_after_first_move
 
             percent = 0
+            #
+
+
 
             if total_score > best_move.score:
-
                 if best_move.score_after_next_move > score_after_first_move:
                     percent = round(total_score / best_move.score, 1)
                     difference_after_first_move = best_move.score_after_next_move - score_after_first_move
@@ -301,6 +302,10 @@ class Grid:
             self.board = old_board
             self.score = old_score
             self.state = old_state
+
+        if best_move.score < 100 and best_move.score_after_next_move < 9:
+            minimax_for_clean_wrapper(self)
+            return
 
         if best_move.move == "None":
             best_move.move = self.get_best_possible_move(self.board)
@@ -396,6 +401,6 @@ class Grid:
 g = Grid()
 
 while str(input()) != "exit":
-    for i in range(500):
+    for i in range(1000):
         g.ai_move()
         #minimax_for_clean_wrapper(g)
