@@ -15,6 +15,8 @@ class Node:
 class Grid:
     available_moves = ["left", "right", "up", "down"]
     increase_free_tiles = 0
+    counter = 0
+    depth = 4
 
     # old_board = 0
     # old_score = 0
@@ -222,13 +224,33 @@ class Grid:
 
     def ai_move(self):
 
-        if self.get_free_tiles() < 4:
+        if self.get_free_tiles() < 3:
             minimax_for_clean_wrapper(self)
+            self.counter = 0
             return
+        else:
+            self.counter += 1
 
         old_board = self.board
         old_score = self.score
         old_state = self.state
+
+        self.depth = 7
+
+        # if self.state == 100 :
+        #     self.depth = 6
+        # elif self.state == 200:
+        #     self.depth = 8
+        # elif self.state == 300:
+        #     self.depth = 9
+        # elif self.state == 400:
+        #     self.depth = 12
+        # elif self.state == 500:
+        #     self.depth = 30
+        # elif self.state == 700:
+        #     self.depth = 40
+
+
 
         best_move = Node("None", 0, 0)
 
@@ -236,65 +258,39 @@ class Grid:
             self.move_tiles(move, True)
             score_after_first_move = self.score - old_score
 
-
-            # depth = 15 - allocated_tiles
-            # if depth > 4:
-            #     depth = 4
-
             leaf_node_val = []
-            depth = 4
-            score_after_minimax = self.minimax(depth, self.board, leaf_node_val, 0)
+
+            score_after_minimax = self.minimax(self.depth, self.board, leaf_node_val, 0)
             total_score = score_after_minimax + score_after_first_move
-            # if total_score < 32 :
-            #     minimax_for_clean_wrapper(self)
-            #     return
-            #percent = best_move.score
-            # if best_move.score != 0:
-            #     percent = round(total_score / best_move.score, 1)
 
-
-
-        #     if score_after_first_move > best_move.score_after_first_move and percent > 1.1:
-        # best_move = Node(move, total_score, score_after_first_move)
             percent = 0
-            # if total_score != 0 and best_move.score != 0:
-            #     percent = round(total_score / best_move.score, 1)
-            #
-            #     if score_after_first_move >= best_move.score_after_next_move and percent > 1.1:
-            #         best_move = Node(move, total_score, score_after_first_move)
-            #
-            #     elif total_score == best_move.score and score_after_first_move > best_move.score_after_next_move:
-            #         best_move = Node(move, total_score, score_after_first_move)
-            #
-            #     elif percent > 1.4:
-            #         best_move = Node(move, total_score, score_after_first_move)
-            #
-            #     # elif total_score > best_move.score and best_move.score == 0:
-            #     #     best_move = Node(move, total_score, score_after_first_move)
-            #
-            # elif best_move.score == 0 or score_after_first_move == 0:
-            #     if total_score > best_move.score:
-            #         best_move = Node(move, total_score, score_after_first_move)
-            #
-            #
-
 
             if total_score > best_move.score:
 
-                # if best_move.score == 0:
-                #     best_move = Node(move, total_score, score_after_first_move)
-
                 if best_move.score_after_next_move > score_after_first_move:
                     percent = round(total_score / best_move.score, 1)
-                    if percent > 1.1:
+                    difference_after_first_move = best_move.score_after_next_move - score_after_first_move
+
+                    if percent > 1.1 and difference_after_first_move < 10:
                         best_move = Node(move, total_score, score_after_first_move)
 
+                    elif percent > 1.2 and difference_after_first_move < 20:
+                        best_move = Node(move, total_score, score_after_first_move)
+
+                    elif percent > 1.3 and difference_after_first_move < 30:
+                        best_move = Node(move, total_score, score_after_first_move)
                 else:
                     best_move = Node(move, total_score, score_after_first_move)
 
             elif total_score == best_move.score and score_after_first_move > best_move.score_after_next_move:
                 best_move = Node(move, total_score, score_after_first_move)
 
+
+            elif total_score < best_move.score:
+                if score_after_first_move > best_move.score_after_next_move:
+                    difference = best_move.score - total_score
+                    if difference < 10:
+                        best_move = Node(move, total_score, score_after_first_move)
 
 
 
