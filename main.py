@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import random
 import numpy as np
 from utils import compress, merge, reverse, transp, is_move_available, print_move_not_possible, \
-    minimax_for_clean_wrapper
+    minimax_for_clean_wrapper, is_game_won, get_largest_tile_value
 
 
 @dataclass
@@ -14,9 +14,8 @@ class Node:
 
 class Grid:
     available_moves = ["left", "right", "up", "down"]
-    increase_free_tiles = 0
-    counter = 0
     depth = 4
+    tile_point_to_win = 2048
 
 
     def __init__(self):
@@ -26,6 +25,8 @@ class Grid:
 
         self.new_values(False)
         self.new_values(False)
+
+        #self.board[0][3] = 2048
 
         self.display()
 
@@ -137,8 +138,8 @@ class Grid:
 
     def ai_move(self):
         free_tiles = self.get_free_tiles()
-        if free_tiles < 3 or self.state < 50:
-            minimax_for_clean_wrapper(self, 4)
+        if self.state < 50 or free_tiles < 3:
+            minimax_for_clean_wrapper(self, 3)
             return
 
         old_board = self.board
@@ -223,7 +224,7 @@ class Grid:
             return 0
 
         for move in self.available_moves:
-            if is_move_available(self, move):
+            if is_move_available(self, move) and not is_game_won(self):
                 self.board = board
                 self.score = score
                 self.move_tiles(move, True, True)
@@ -254,6 +255,9 @@ class Grid:
 
 g = Grid()
 
-while str(input()) != "exit":
-    for i in range(1000):
+for i in range(1000):
+    g.ai_move()
+
+while str(input("Press enter to continue")) != "exit":
+    for i in range(500):
         g.ai_move()

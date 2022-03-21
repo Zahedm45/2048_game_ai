@@ -95,17 +95,31 @@ def is_move_available(self, move):
 def print_move_not_possible(move):
     print("Move: ", move, " is not possible!")
 
-
-def highest_tile_score(board):
+def get_largest_tile_value(self):
     size = 4
     val1 = 0
     for row in range(size):
         for column in range(size):
-            val2 = board[row][column]
+            val2 = self.board[row][column]
+            if val2 > val1:
+                val1 = val2
+    return val1
+
+
+
+def is_game_won(self):
+    size = 4
+    val1 = 0
+    for row in range(size):
+        for column in range(size):
+            val2 = self.board[row][column]
             if val2 > val1:
                 val1 = val2
 
-    return val1
+    if val1 >= self.tile_point_to_win:
+        return True
+    else:
+        return False
 
 
 def minimax_for_clean_wrapper(self, depth):
@@ -138,7 +152,7 @@ def minimax_for_clean_wrapper(self, depth):
 
     if best_move.move == "None":
         best_move.move = self.get_best_possible_move(self.board)
-        print("Next best random")
+        #print("Next best random")
 
     if best_move.move == "None":
         print("Game lost!")
@@ -146,6 +160,9 @@ def minimax_for_clean_wrapper(self, depth):
     print(best_move.move)
     self.move_tiles(best_move.move, True, False)
     self.display()
+    if is_game_won(self):
+        print("You won!")
+        exit()
 
 
 def minimax_for_free_tiles(self, depth, board, leaf_values):
@@ -153,7 +170,7 @@ def minimax_for_free_tiles(self, depth, board, leaf_values):
         leaf_values.append(self.get_free_tiles())
         return 0
     for move in self.available_moves:
-        if is_move_available(self, move):
+        if is_move_available(self, move) and not is_game_won(self):
             self.board = board
             self.move_tiles(move, True, True)
             minimax_for_free_tiles(self, depth - 1, self.board, leaf_values)
