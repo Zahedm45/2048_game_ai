@@ -118,19 +118,19 @@ def minimax_for_clean_wrapper(self):
     best_move = Node("None", 0, 0)
     old_free_tiles = self.get_free_tiles()
 
-    depth = 2
+    depth = 4
     for move in self.available_moves:
         if not is_move_available(self, move):
             continue
 
-        self.move_tiles(move, True)
+        self.move_tiles(move, True, True)
         free_tiles_after_first_move = self.get_free_tiles()
 
         leaf_values = []
         new_free_tiles = minimax_for_free_tiles(self, depth, self.board, leaf_values)
         #new_free_tiles = minimax_heuristic(self, depth, self.board, free_tiles_after_first_move)
         total_free_tiles = free_tiles_after_first_move + new_free_tiles
-        print(move, " after first move: ", free_tiles_after_first_move, " after minimax ", new_free_tiles,  " = ", total_free_tiles)
+        #print(move, " after first move: ", free_tiles_after_first_move, " after minimax ", new_free_tiles,  " = ", total_free_tiles)
 
         if total_free_tiles > best_move.free_tiles:
             best_move = Node(move, total_free_tiles, free_tiles_after_first_move)
@@ -163,7 +163,7 @@ def minimax_for_clean_wrapper(self):
         print("Game lost!")
         exit()
     print(best_move.move)
-    self.move_tiles(best_move.move, True)
+    self.move_tiles(best_move.move, True, False)
     self.display()
 
 
@@ -176,7 +176,7 @@ def minimax_for_free_tiles(self, depth, board, leaf_values):
     for move in self.available_moves:
         if is_move_available(self, move):
             self.board = board
-            self.move_tiles(move, True)
+            self.move_tiles(move, True, True)
             minimax_for_free_tiles(self, depth - 1, self.board, leaf_values)
 
         else:
