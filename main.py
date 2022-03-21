@@ -239,10 +239,10 @@ class Grid:
         #self.depth = 7
 
         if self.state == 100 :
-            self.depth = 4
-        elif self.state == 200:
-            self.depth = 5
-        elif self.state == 300:
+            self.depth = 3
+        # elif self.state == 200:
+        #     self.depth = 5
+        elif self.state == 400:
             self.depth = 6
 
 
@@ -300,15 +300,16 @@ class Grid:
             self.score = old_score
             self.state = old_state
 
-        if best_move.score <= 40 and best_move.score_after_next_move == 40 and self.state > 300:
-            minimax_for_clean_wrapper(self, 4)
-            return
+        # if 40 > best_move.score != best_move.score_after_next_move and self.depth > 5:
+        #     minimax_for_clean_wrapper(self, 4)
+        #     return
 
 
-        # if free_tiles < 5 and self.state > 300:
-        #     if best_move.score <= 60 and best_move.score_after_next_move <= 50:
-        #         minimax_for_clean_wrapper(self)
-        #         return
+        if free_tiles < 5 and self.state > 300:
+            if 60 > best_move.score != best_move.score_after_next_move:
+                minimax_for_clean_wrapper(self, 5)
+                return
+
 
         if best_move.move == "None":
             best_move.move = self.get_best_possible_move(self.board)
