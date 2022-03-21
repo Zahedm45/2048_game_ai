@@ -18,52 +18,14 @@ class Grid:
     counter = 0
     depth = 4
 
-    # old_board = 0
-    # old_score = 0
-    # old_state = 0
+
     def __init__(self):
         self.score = 0
         self.state = 0
         self.board = np.zeros((4, 4), dtype=int)
-        i_1 = [random.randint(0, 3), random.randint(0, 3)]
-        i_2 = [random.randint(0, 3), random.randint(0, 3)]
-        while i_2 == i_1:
-            i_2 = [random.randint(0, 3), random.randint(0, 3)]
 
-        ##        self.board[i_1[0]][i_1[1]], self.board[i_2[0]][i_2[1]] = 2, 2
-
-        # self.board[0][0] = 16
-        # self.board[0][1] = 2
-        # self.board[0][2] = 4
-        # self.board[0][3] = 2
-        #
-        # self.board[1][0] = 4
-        # self.board[1][1] = 32
-        # self.board[1][2] = 128
-        # self.board[1][3] = 4
-        #
-        # self.board[2][0] = 64
-        # self.board[2][1] = 16
-        # self.board[2][2] = 8
-        # self.board[2][3] = 2
-        #
-        # self.board[3][0] = 2
-        # self.board[3][1] = 8
-        # self.board[3][2] = 2
-        # self.board[3][3] = 0
-
-        # self.board[1][0] = 4
-        # self.board[2][0] = 8
-        # self.board[3][0] = 8
-        # self.board[3][1] = 4
-
-        self.board[0][3] = 4
-        self.board[0][2] = 4
-        #
-        #
-        # self.board[0][0] = 2
-        # self.board[0][1] = 4
-        # self.board[1][1] = 2
+        self.new_values(False)
+        self.new_values(False)
 
         self.display()
 
@@ -90,8 +52,6 @@ class Grid:
         if is_game_play:
             self.new_values(only_two)
 
-    ##        self.display()
-
     def right(self, is_game_play, only_two):
         arr1 = self.board.copy()
 
@@ -104,8 +64,6 @@ class Grid:
         if is_game_play:
             self.new_values(only_two)
 
-    ##        self.display()
-
     def up(self, is_game_play, only_two):
         arr1 = self.board.copy()
 
@@ -117,8 +75,6 @@ class Grid:
 
         if is_game_play:
             self.new_values(only_two)
-
-    ##        self.display()
 
     def down(self, is_game_play, only_two):
         arr1 = self.board.copy()
@@ -133,8 +89,6 @@ class Grid:
 
         if is_game_play:
             self.new_values(only_two)
-
-    ##        self.display()
 
     def display(self):
         print("-----------------------------------------")
@@ -181,51 +135,6 @@ class Grid:
         elif move == "down":
             self.down(is_game_play, only_two)
 
-
-
-
-
-
-
-
-
-
-    # def clean_up_board(self):
-    #     ##is_move_available(self, move)
-    #
-    #     old_board = self.board
-    #     old_score = self.score
-    #     old_state = self.state
-    #     best_move = "None"
-    #     free_tiles = 0
-    #     for move in self.available_moves:
-    #         if not is_move_available(self, move):
-    #             print_move_not_possible(move)
-    #             continue
-    #
-    #         self.move_tiles(move, True)
-    #         new_free_tiles = self.get_free_tiles()
-    #         if new_free_tiles > free_tiles:
-    #             best_move = move
-    #             free_tiles = new_free_tiles
-    #
-    #         self.board = old_board
-    #         self.score = old_score
-    #         self.state = old_state
-    #
-    #
-    #     if best_move == "None":
-    #         best_move = self.get_best_possible_move(self.board)
-    #         print("random")
-    #
-    #     if best_move == "None":
-    #         print("Game lost!")
-    #         exit()
-    #     print(best_move, " from cleaned up")
-    #     self.move_tiles(best_move, True)
-    #     self.display()
-
-
     def ai_move(self):
         free_tiles = self.get_free_tiles()
         if free_tiles < 3 or self.state < 50:
@@ -235,20 +144,12 @@ class Grid:
         old_board = self.board
         old_score = self.score
         old_state = self.state
-
-        #self.depth = 7
-
-        if self.state == 100 :
+        if self.state == 100:
             self.depth = 3
-        # elif self.state == 200:
-        #     self.depth = 5
         elif self.state == 400:
             self.depth = 6
 
-
-
         best_move = Node("None", 0, 0)
-
         for move in self.available_moves:
             self.move_tiles(move, True, True)
             score_after_first_move = self.score - old_score
@@ -258,72 +159,29 @@ class Grid:
             score_after_minimax = self.minimax(self.depth, self.board, leaf_node_val, 0)
             total_score = score_after_minimax + score_after_first_move
 
-            percent = 0
-            #
-
-
-
             if total_score > best_move.score:
                 best_move = Node(move, total_score, score_after_first_move)
-                # if best_move.score_after_next_move > score_after_first_move:
-                #     percent = round(total_score / best_move.score, 1)
-                #     difference_after_first_move = best_move.score_after_next_move - score_after_first_move
-                #
-                #     if percent > 1.1 and difference_after_first_move < 10:
-                #         best_move = Node(move, total_score, score_after_first_move)
-                #
-                #     elif percent > 1.2 and difference_after_first_move < 20:
-                #         best_move = Node(move, total_score, score_after_first_move)
-                #
-                #     elif percent > 1.3 and difference_after_first_move < 30:
-                #         best_move = Node(move, total_score, score_after_first_move)
-                # else:
-                #     best_move = Node(move, total_score, score_after_first_move)
 
             elif total_score == best_move.score and score_after_first_move > best_move.score_after_next_move:
                 best_move = Node(move, total_score, score_after_first_move)
 
-
-            # elif total_score < best_move.score:
-            #     if score_after_first_move > best_move.score_after_next_move:
-            #         difference = best_move.score - total_score
-            #         if difference < 10:
-            #             best_move = Node(move, total_score, score_after_first_move)
-
-
-
-
-            print(move, " score after the first move ", score_after_first_move, " score minimax", score_after_minimax,
-                  " = ", total_score, " percent: ",  best_move.score, " / total = ", percent)
+            # print(move, " score after the first move ", score_after_first_move, " score minimax", score_after_minimax,
+            #       " = ", total_score)
 
             self.board = old_board
             self.score = old_score
             self.state = old_state
-
-        # if 40 > best_move.score != best_move.score_after_next_move and self.depth > 5:
-        #     minimax_for_clean_wrapper(self, 4)
-        #     return
-
 
         if free_tiles < 5 and self.state > 300:
             if 60 > best_move.score != best_move.score_after_next_move:
                 minimax_for_clean_wrapper(self, 5)
                 return
 
-
-        if best_move.move == "None":
-            best_move.move = self.get_best_possible_move(self.board)
-            print("Random!")
-
-        if best_move.move == "None":
-            print("Game lost!")
-            exit()
-
         print(best_move.move)
         self.move_tiles(best_move.move, True, False)
         self.display()
 
-## This method will be called when the minimax algorithm does not find any path
+    ## This method will be called when the minimax algorithm does not find any path
     def get_best_possible_move(self, board):
         old_board = self.board
         at_least_possible_move = "None"
@@ -344,8 +202,7 @@ class Grid:
 
         return at_least_possible_move
 
-
-## This method makes sure the added value(2 or 4) is close to 2s and 4s
+    ## This method makes sure the added value(2 or 4) is close to 2s and 4s
     def is_next_move_available(self):
         size = 4
         for row in range(size - 1):
@@ -360,16 +217,10 @@ class Grid:
                     if self.board[row][column + 1] == 2 or self.board[row][column + 1] == 0:
                         return True
 
-
-
-
-
     def minimax(self, depth, board, leaf_values, score):
         if depth < 1:
-            #leaf_values.append(self.score)
             leaf_values.append(score)
             return 0
-        #self.score = score
 
         for move in self.available_moves:
             if is_move_available(self, move):
@@ -381,7 +232,6 @@ class Grid:
             else:
                 self.minimax(0, self.board, leaf_values, score)
 
-
         return max(leaf_values)
 
     def get_free_tiles(self):
@@ -392,7 +242,7 @@ class Grid:
                 value = self.board[row][column]
                 if value != 0:
                     counter -= 1
-        #print("from free tiles ", counter)
+        # print("from free tiles ", counter)
         return counter
 
     def is_point_available(self, move):
@@ -407,4 +257,3 @@ g = Grid()
 while str(input()) != "exit":
     for i in range(1000):
         g.ai_move()
-        #minimax_for_clean_wrapper(g)
