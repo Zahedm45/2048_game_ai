@@ -111,14 +111,14 @@ def highest_tile_score(board):
 
 
 
-def minimax_for_clean_wrapper(self):
+def minimax_for_clean_wrapper(self, depth):
     old_board = self.board
     old_score = self.score
     old_state = self.state
     best_move = Node("None", 0, 0)
     old_free_tiles = self.get_free_tiles()
 
-    depth = 4
+    #depth = 4
     for move in self.available_moves:
         if not is_move_available(self, move):
             continue

@@ -227,13 +227,10 @@ class Grid:
 
 
     def ai_move(self):
-
-        if self.get_free_tiles() < 4:
-            minimax_for_clean_wrapper(self)
-            self.counter = 0
+        free_tiles = self.get_free_tiles()
+        if free_tiles < 3 or self.state < 50:
+            minimax_for_clean_wrapper(self, 4)
             return
-        else:
-            self.counter += 1
 
         old_board = self.board
         old_score = self.score
@@ -247,11 +244,6 @@ class Grid:
             self.depth = 5
         elif self.state == 300:
             self.depth = 6
-        # elif self.state == 400:
-        #     self.depth = 4
-        # elif self.state == 500:
-        #     self.depth = 3
-
 
 
 
@@ -301,16 +293,22 @@ class Grid:
 
 
 
-            # print(move, " score after the first move ", score_after_first_move, " score minimax", score_after_minimax,
-            #       " = ", total_score, " percent: ",  best_move.score, " / total = ", percent)
+            print(move, " score after the first move ", score_after_first_move, " score minimax", score_after_minimax,
+                  " = ", total_score, " percent: ",  best_move.score, " / total = ", percent)
 
             self.board = old_board
             self.score = old_score
             self.state = old_state
 
-        # if best_move.score < 100 and best_move.score_after_next_move < 9:
-        #     minimax_for_clean_wrapper(self)
-        #     return
+        if best_move.score <= 40 and best_move.score_after_next_move == 40 and self.state > 300:
+            minimax_for_clean_wrapper(self, 4)
+            return
+
+
+        # if free_tiles < 5 and self.state > 300:
+        #     if best_move.score <= 60 and best_move.score_after_next_move <= 50:
+        #         minimax_for_clean_wrapper(self)
+        #         return
 
         if best_move.move == "None":
             best_move.move = self.get_best_possible_move(self.board)
